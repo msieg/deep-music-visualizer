@@ -108,10 +108,17 @@ python deep_visualizer.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105
 
 ### Num_classes
 
-If you want to focus the visualizer around fewer than 12 themes, you can set num_classes to a number less than 12. T
+If you want to focus the visualizer around fewer than twelve themes, you can set num_classes to a number less than twelve. Since each class is associated with a pitch, the pitches that are kept when num_classes < 12 are those with the most overall power in the song. 
 
 Default: 12
 
 Example (if num_classes is set to default of twelve):
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --num_classes 4 
+```
+
+Or if you want to choose the classes:
+```bash
+python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 56 782
+```
+
