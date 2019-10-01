@@ -8,7 +8,6 @@ Examples: https://www.instagram.com/deep_visualizer/
 Download this repository and run this command in terminal:
 
 ```bash
-python -m pytest -sv ./pytorch_transformers/tests/
-python -m pytest -sv ./examples/
+pip install -r requirements.txt
 ```
 
