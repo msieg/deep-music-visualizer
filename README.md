@@ -5,7 +5,7 @@ Examples: https://www.instagram.com/deep_visualizer/
 
 # Installation
 
-*This repo has been tested on Python3
+This repo has been tested on Python3
 
 Download this repository and run this command in terminal:
 
