@@ -106,3 +106,12 @@ Example (if num_classes is set to default of twelve):
 python deep_visualizer.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105 998 56 677 884 530
 ```
 
+### Num_classes
+
+If you want to focus the visualizer around fewer than 12 themes, you can set num_classes to a number less than 12. T
+
+Default: 12
+
+Example (if num_classes is set to default of twelve):
+```bash
+python deep_visualizer.py --song beethoven.mp3 --num_classes 4 
