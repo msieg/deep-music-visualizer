@@ -15,5 +15,14 @@ pip install -r requirements.txt
 
 # How to run
 
-All features of the visualizer have been modularized as input parameters. Each parameter is described below.
+All features of the visualizer are available as input parameters. Each parameter is described below.
 
+### Song
+
+Audio file of type mp3, wav, m4a, ogg, aac, au, or flac.
+
+This is the only required argument! Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3
+```
