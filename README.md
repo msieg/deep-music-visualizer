@@ -91,5 +91,5 @@ Default: 1
 
 ### Classes
 
-If you want to choose which classes (image categories) to visualize, you can specify a list of indices here. The indices are based on ImageNet classes ([See here](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a))
+If you want to choose which classes (image categories) to visualize, you can specify a list of indices here. The indices are based on ImageNet classes ([See here](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a)). The number of class indices must be equal to [num_classes] (default is 12, corresponding to the 12 musical pitches (A, A#, B, etc.)). Or you can enter the class indices in order of priority (highest priority first) and set [sort_classes_by_power] to 1. 
 
