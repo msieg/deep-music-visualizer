@@ -82,3 +82,13 @@ Example:
 python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 0.1
 ```
 
+### Depth
+
+This specifies the max value of the class vector units. Numbers closer to 1 yield more thematically rich content. Numbers closer to 0 seem to yield more 'deep' structures like human and dog faces. 
+
+Range: 0.01 - 1
+Default: 1
+
+### Classes
+
+
