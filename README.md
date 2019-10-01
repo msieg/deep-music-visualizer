@@ -99,6 +99,8 @@ python deep_visualizer.py --song beethoven.mp3 --depth 0.5
 
 If you want to choose which classes (image categories) to visualize, you can specify a list of ImageNet indices (1-1000) here. ([list of ImageNet class indices](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a)). The number of classes must be equal to [num_classes] (default is 12, corresponding to the 12 musical pitches (A, A#, B, etc.)). You can also enter the class indices in order of priority (highest priority first) and set [sort_classes_by_power] to 1. 
 
+Default: 12 random indices between 1-1000
+
 Example (if num_classes is set to default of 12):
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105 998 56 677 884 530
