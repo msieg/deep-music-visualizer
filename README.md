@@ -112,7 +112,7 @@ If you want to focus the visualizer around fewer than twelve themes, you can set
 
 Default: 12
 
-Example (if num_classes is set to default of twelve):
+Example:
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --num_classes 4 
 ```
@@ -121,4 +121,11 @@ Or if you want to choose the classes:
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 56 782
 ```
+
+### Sort_classes_by_power
+
+Set this to 1 if you want to prioritize the classes based on the order that you entered them in the 
+
+
+
 
