@@ -54,3 +54,4 @@ Example:
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --duration 30
 ```
+
