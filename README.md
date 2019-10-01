@@ -91,4 +91,5 @@ Default: 1
 
 ### Classes
 
+If you want to choose which classes (image categories) to visualize, you can specify a list of indices here. The indices are based on ImageNet classes ([See here](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a))
 
