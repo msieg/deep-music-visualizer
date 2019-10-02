@@ -17,6 +17,10 @@ cd deep-visualizer
 pip install -r requirements.txt
 ```
 
+If you are running on linux, you will also need to run:
+
+apt-get install ffmpeg
+
 ## How to run
 
 All features of the visualizer are available as input parameters. Each parameter is described below.
