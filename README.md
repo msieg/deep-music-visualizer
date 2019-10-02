@@ -165,6 +165,7 @@ python deep_visualizer.py --song beethoven.mp3 --frame_length 2048
 The truncation controls the variability of images that BigGAN generates. Truncations closer to 1 yield more variable images, and truncations closer to 0 yield simpler images with more recognizable objects. 
 
 Range: 0.1 - 1
+
 Default: 1
 
 Example:
@@ -178,6 +179,7 @@ python deep_visualizer.py --song beethoven.mp3 --truncation 0.4
 After the class vectors have been generated, they are smoothed by interpolating linearly between the means of class vectors within bins of size [smooth_factor]. This is performed because small local fluctuations in pitch can cause the video frames to fluctuate back and forth. If you want to visualize very fast music with rapid changes in pitch and tempo, you can lower the smooth factor to 1. You may also want to lower the frame_length in that case. 
 
 Range: > 1
+
 Default: 10
 
 Example:
@@ -185,5 +187,32 @@ Example:
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --smooth_factor 6
 ```
+
+### Batch_size
+
+BigGAN generates the images in batches of size [batch_size]. The only reason to lower batch_size from the default of 30 is if you run out of CUDA memory on a GPU. This will slightly increase overall runtime. 
+
+Default: 30
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --batch_size 20
+```
+
+### Use_previous_classes
+
+If your previous run of the visualizer used random classes (i.e. you did not manually set the [class] input), and you liked the video output but want to mess with some other parameters, set use_previous_classes to 1 so that you use can create a similar video with the same classes. 
+
+Default: 0
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --use_previous_classes 1
+
+
+```
+
 
 
