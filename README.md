@@ -210,9 +210,9 @@ Example:
 
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --use_previous_classes 1
-
-
 ```
+
+
 
 
 
