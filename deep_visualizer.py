@@ -11,7 +11,7 @@ from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noi
 
 #get input arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("--song",required=True)
+parser.add_argument("--song")#,required=True)
 parser.add_argument("--resolution")
 parser.add_argument("--duration", type=int)
 parser.add_argument("--pitch_sensitivity", type=int)
@@ -45,7 +45,7 @@ else:
 if args.pitch_sensitivity:
     pitch_sensitivity=args.pitch_sensitivity
 else:
-    pitch_sensitivity=50  
+    pitch_sensitivity=250
     
 if args.tempo_sensitivity:
     tempo_sensitivity=args.tempo_sensitivity
@@ -181,9 +181,6 @@ for pi,p in enumerate(chromasort[:num_classes]):
     if len(classes)==num_classes and num_classes < 12:
         cv1[classes[pi]] = chroma[p][0]
         
-    elif sort_classes_by_power==1:
-        cv1[classes[pi]] = chroma[p][0]
-        
     else:
         cv1[classes[p]] = chroma[p][0]
 
@@ -259,6 +256,16 @@ def smooth(class_vectors,smooth_factor):
     return np.array(class_vectors_terp)
 
 
+def normalize_cv(cv2):
+    min_class_val = min(i for i in cv2 if i != 0)
+    for ci,c in enumerate(cv2):
+        if c==0:
+            cv2[ci]=min_class_val    
+    cv2=(cv2-min_class_val)/np.ptp(cv2) 
+    
+    return cv2
+
+
 print('\nGenerating input vectors \n')
 
 for i in tqdm(range(len(gradm))):   
@@ -267,7 +274,7 @@ for i in tqdm(range(len(gradm))):
     pass
 
     #update jitter vector every 100 frames by setting ~half of noise vector units to lower sensitivity
-    if i%100==0:
+    if i%200==0:
         jitters=new_jitters(jitter)
 
     #get last noise vector
@@ -302,36 +309,25 @@ for i in tqdm(range(len(gradm))):
     for j in range(num_classes):
         
         if len(classes)==num_classes and num_classes < 12:
-            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
-
-            
-        elif sort_classes_by_power==1:
-            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
-
-            
+            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/(300-pitch_sensitivity)))/(1+(1/((300-pitch_sensitivity))))
+          
         else:
-            cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
-
-        
+            cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/(300-pitch_sensitivity)))/(1+(1/((300-pitch_sensitivity))))
 
 
-    # for j in range(num_classes):
-    #     cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i] + chromagrad[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity/2)))
-
-    #normalize new class vector between 0 and 1
-    min_class_val = min(i for i in cv2 if i != 0)
-    for ci,c in enumerate(cv2):
-        if c==0:
-            cv2[ci]=min_class_val    
-    cv2=(cv2-min_class_val)/np.ptp(cv2) 
+    #if more than 6 classes, normalize new class vector between 0 and 1, else simply set max class val to 1
+    if num_classes > 6:
+        cv2=normalize_cv(cv2)
+    else:
+        cv2=cv2/np.max(cv2)
     
-    #this prevents rare bugs where all classes are the same value
-    if np.std(cv2[np.where(cv2!=0)]) < 0.0000001:
-        cv2[chromasort[0]]=cv2[chromasort[0]]+0.01
-
     #adjust depth    
     cv2=cv2*depth
     
+    #this prevents rare bugs where all classes are the same value
+    if np.std(cv2[np.where(cv2!=0)]) < 0.0000001:
+        cv2[classes[0]]=cv2[classes[0]]+0.01
+
     #append new class vector
     class_vectors.append(cv2)
     
@@ -352,6 +348,7 @@ else:
     #save record of vectors for current video
     np.save('class_vectors.npy',class_vectors)
     np.save('noise_vectors.npy',noise_vectors)
+
 
 
 ########################################
@@ -407,7 +404,11 @@ for i in tqdm(range(frame_lim)):
 
 
 #Save video  
-aud = mpy.AudioFileClip(song,fps = 44100) 
+aud = mpy.AudioFileClip(song, fps = 44100) 
+
+if args.duration:
+    aud.duration=args.duration
+
 clip = mpy.ImageSequenceClip(frames, fps=22050/frame_length)
 clip = clip.set_audio(aud)
 clip.write_videofile("output.mp4",audio_codec='aac')
