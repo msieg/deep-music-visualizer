@@ -20,15 +20,11 @@ pip install -r requirements.txt
 If you are on linux, you may also need to run:
 
 ```bash
+apt-get update
 apt-get install ffmpeg
 apt-get install libsndfile1
 ```
 
-If ffmpeg install fails, you may first need to run:
-
-```bash
-apt-get update
-```
 
 ## How to run
 
