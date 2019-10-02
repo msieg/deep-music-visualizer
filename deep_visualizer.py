@@ -27,6 +27,7 @@ parser.add_argument("--smooth_factor", type=int)
 parser.add_argument("--batch_size", type=int)
 parser.add_argument("--use_previous_classes", type=int)
 parser.add_argument("--use_previous_vectors", type=int)
+parser.add_argument("--output_file")
 args = parser.parse_args()
 
 
@@ -102,6 +103,11 @@ if args.use_previous_vectors:
     use_previous_vectors=args.use_previous_vectors
 else:
     use_previous_vectors=0
+    
+if args.output_file:
+    outname=args.output_file
+else:
+    outname='output.mp4'
 
 
 
@@ -411,7 +417,7 @@ if args.duration:
 
 clip = mpy.ImageSequenceClip(frames, fps=22050/frame_length)
 clip = clip.set_audio(aud)
-clip.write_videofile("output.mp4",audio_codec='aac')
+clip.write_videofile(outname,audio_codec='aac')
 
 
 
