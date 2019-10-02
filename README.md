@@ -39,7 +39,7 @@ python deep_visualizer.py --song beethoven.mp3
 
 Default: 128
 
-If you are running on a CPU (if you're not sure, you are on a CPU), you probably want to use a resolution of 128 or else the code will take a very long time to run. Even at 128, this will take ~25 minutes to generate 1 minute of video on a standard laptop (assuming all other parameters are default. To speed up runtime, you can increase the [frame_length](#Frame_length). To dramatically speed up runtime and generate higher quality videos, use a resolution of 512 on a [GPU on a google cloud virtual machine](https://cloud.google.com/deep-learning-vm/docs/cloud-marketplace).
+If you are running on a CPU (if you're not sure, you are on a CPU), you probably want to use a resolution of 128 or else the code will take a very long time to run. Even at 128, this will take ~25 minutes to generate 1 minute of video on a standard desktop computer (assuming all other parameters are default). To speed up runtime, you can increase the [frame_length](#Frame_length). To dramatically speed up runtime and generate higher quality videos, use a resolution of 512 on a [GPU on a google cloud virtual machine](https://cloud.google.com/deep-learning-vm/docs/cloud-marketplace).
 
 Example:
 
