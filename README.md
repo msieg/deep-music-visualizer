@@ -193,9 +193,9 @@ python deep_visualizer.py --song beethoven.mp3 --truncation 0.4
 
 After the class vectors have been generated, they are smoothed by interpolating linearly between the means of class vectors in bins of size [smooth_factor]. This is performed because small local fluctuations in pitch can cause the video frames to fluctuate back and forth. If you want to visualize very fast music with rapid changes in pitch and tempo, you can lower the smooth factor to 1. You may also want to lower the frame_length in that case. However, for most songs, it is difficult to avoid rapid fluctuations with smooth factors less than 10 (assuming a default [frame_length](#frame_length)). 
 
-Range: > 1
+Recommended range: 1 – 30
 
-Default: 10
+Default: 20
 
 Example:
 
