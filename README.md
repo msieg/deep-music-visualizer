@@ -21,6 +21,7 @@ If you are on linux, you may also need to run:
 
 ```bash
 apt-get install ffmpeg
+apt-get install libsndfile1
 ```
 
 ## How to run
