@@ -117,6 +117,8 @@ python deep_visualizer.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105
 
 If you want to focus the visualizer around fewer than twelve themes, you can set num_classes to a number less than twelve. Since each class is associated with a pitch, the pitches that are retained when num_classes < 12 are those with the most overall power in the song. 
 
+Hint: If you are using a small number of classes (<4), you will probably want to increase the pitch sensitivity.
+
 Default: 12
 
 Example:
