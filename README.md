@@ -23,7 +23,7 @@ All features of the visualizer are available as input parameters. Each parameter
 
 ### song
 
-Audio file of type mp3, wav, m4a, ogg, aac, au, or flac.
+Audio file of type mp3, wav, or ogg.
 
 This is the only required argument!
 
@@ -61,18 +61,18 @@ python deep_visualizer.py --song beethoven.mp3 --duration 30
 
 ### pitch sensitivity
 
-The pitch sensitivity controls how rapidly the class vector (thematic content of the video) will react to changes in pitch. The lower the number, the higher the sensitivity. 
+The pitch sensitivity controls how rapidly the class vector (thematic content of the video) will react to changes in pitch. The higher the number, the higher the sensitivity. 
 
-Range: > 2
+Range: 0 – 300
 
-Recommended range: 5 - 200
+Recommended range: 200 – 295
 
-Default: 50
+Default: 250
 
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 10
+python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 280
 ```
 
 ### tempo sensitivity
