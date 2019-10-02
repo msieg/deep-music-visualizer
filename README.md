@@ -148,7 +148,7 @@ python deep_visualizer.py --song beethoven.mp3 --jitter 0
 
 ### Frame_length
 
-The frame length controls the number of audio frames per video frame in the output. If you want a very high quality video with a high frame rate, lower the frame_length. If you want a lower frame rate (perhaps if you are running on a CPU and want to cut down your runtime), raise the frame rate. The default of 512 is high quality. 
+The frame length controls the number of audio frames per video frame in the output. If you want a high frame rate for visualizing very rapid music, lower the frame_length. If you want a lower frame rate (perhaps if you are running on a CPU and want to cut down your runtime), raise the frame_length. The default of 512 is high quality. 
 
 Range: Multiples of 2^6
 
@@ -159,3 +159,31 @@ Example:
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --frame_length 2048
 ```
+
+### Truncation
+
+The truncation controls the variability of images that BigGAN generates. Truncations closer to 1 yield more variable images, and truncations closer to 0 yield simpler images with more recognizable objects. 
+
+Range: 0.1 - 1
+Default: 1
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --truncation 0.4
+```
+
+### Smooth_factor
+
+After the class vectors have been generated, they are smoothed by interpolating linearly between the means of class vectors within bins of size [smooth_factor]. This is performed because small local fluctuations in pitch can cause the video frames to fluctuate back and forth. If you want to visualize very fast music with rapid changes in pitch and tempo, you can lower the smooth factor to 1. You may also want to lower the frame_length in that case. 
+
+Range: > 1
+Default: 10
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --smooth_factor 6
+```
+
+
