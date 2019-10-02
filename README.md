@@ -1,6 +1,13 @@
 # Deep Visualizer
 The Deep Visualizer uses BigGAN (Brock et al., 2018) to visualize music.
 
+Example:
+
+https://www.youtube.com/watch?v=L7R-yBZ5QYc
+
+[![Watch the video](https://img.youtube.com/watch?v=L7R-yBZ5QYc/)](youtube.com/watch?v=L7R-yBZ5QYc)
+
+
 Examples: https://www.instagram.com/deep_visualizer/
 
 ## Installation
