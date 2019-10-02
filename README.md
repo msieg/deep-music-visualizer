@@ -73,7 +73,7 @@ Range: 0 – 299
 
 Recommended range: 200 – 295
 
-Default: 250
+Default: 240
 
 Example:
 
@@ -86,7 +86,7 @@ python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 280
 The tempo sensitivity controls how rapidly the noise vector (i.e. the overall size, position, and orientation of objects in the images) will react to changes in volume and tempo. The higher the number, the higher the sensitivity. 
 
 Recommended range: 0.05 – 0.8
-Default: 0.2
+Default: 0.25
 
 Example:
 
