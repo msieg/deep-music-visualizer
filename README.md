@@ -37,7 +37,7 @@ python deep_visualizer.py --song beethoven.mp3
 
 Default: 128
 
-If you are running on a CPU (if you're not sure, you are on a CPU), you probably want to use a resolution of 128 or else the code will take a very long time to run. Even at 128, this will take ~25 minutes to generate 1 minute of video on a standard laptop (assuming all other parameters are default. To speed up runtime, you can increase the [frame_length](#Frame_length). To dramatically reduce runtime and generate higher quality videos, use a resolution of 512 on a [GPU on a google cloud virtual machine](https://cloud.google.com/deep-learning-vm/docs/cloud-marketplace).
+If you are running on a CPU (if you're not sure, you are on a CPU), you probably want to use a resolution of 128 or else the code will take a very long time to run. Even at 128, this will take ~25 minutes to generate 1 minute of video on a standard laptop (assuming all other parameters are default. To speed up runtime, you can increase the [frame_length](#Frame_length). To dramatically speed up runtime and generate higher quality videos, use a resolution of 512 on a [GPU on a google cloud virtual machine](https://cloud.google.com/deep-learning-vm/docs/cloud-marketplace).
 
 Example:
 
@@ -47,7 +47,7 @@ python deep_visualizer.py --song beethoven.mp3 --resolution 512
 
 ### Duration
 
-Duration of the video output, in seconds.
+Duration of the video output in seconds. It can be useful to generate shorter videos while you are tweaking the other visualizer parameters. Once you find your preferred parameters, remove the duration argument and set [use_previous_vectors](#use_previous_vectors) to 1 to generate the same video but for the full duration of the song. 
 
 Default: Full length of the audio
 
