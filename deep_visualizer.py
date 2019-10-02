@@ -176,8 +176,16 @@ if sort_classes_by_power==1:
 
 #initialize first class vector
 cv1=np.zeros(1000)
-for p in chromasort[:num_classes]:
-    cv1[classes[p]] = chroma[p][0]
+for pi,p in enumerate(chromasort[:num_classes]):
+    
+    if len(classes)==num_classes and num_classes < 12:
+        cv1[classes[pi]] = chroma[p][0]
+        
+    elif sort_classes_by_power==1:
+        cv1[classes[pi]] = chroma[p][0]
+        
+    else:
+        cv1[classes[p]] = chroma[p][0]
 
 #initialize first noise vector
 nv1 = truncated_noise_sample(truncation=truncation)[0]
@@ -292,7 +300,19 @@ for i in tqdm(range(len(gradm))):
     #generate new class vector
     cv2=np.zeros(1000)
     for j in range(num_classes):
-        cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
+        
+        if len(classes)==num_classes and num_classes < 12:
+            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
+
+            
+        elif sort_classes_by_power==1:
+            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
+
+            
+        else:
+            cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
+
+        
 
 
     # for j in range(num_classes):
