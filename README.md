@@ -212,7 +212,16 @@ Example:
 python deep_visualizer.py --song beethoven.mp3 --use_previous_classes 1
 ```
 
+### Use_previous_vectors
 
+If you're messing around with the visualizer parameters, it can be useful to generate videos with short durations to keep your runtime low. Once you find the right set of parameters, set use_previous_vector to 1 to generate the same exact video again, but with a longer duration. 
 
+Default: 0
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --use_previous_vectors 1
+```
 
 
