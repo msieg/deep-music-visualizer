@@ -73,7 +73,7 @@ Range: 0 – 299
 
 Recommended range: 200 – 295
 
-Default: 240
+Default: 220
 
 Example:
 
