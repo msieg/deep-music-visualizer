@@ -118,6 +118,7 @@ python deep_visualizer.py --song beethoven.mp3 --num_classes 4
 ```
 
 Or if you want to choose the classes:
+
 ```bash
 python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 56 782
 ```
@@ -126,8 +127,22 @@ python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 
 
 Set this to 1 if you want to prioritize the classes based on the order that you entered them in the [class] input. If you do not specify the [class] input, there is no reason to set this to 1. If you do specify the class input and do not set this to 1, the classes will be associated with the pitches in harmonic order from A, A#, B, etc.
 
+Example:
+
 ```bash
 python deep_visualizer.py --song beethoven.mp3  --classes 45 99 567 234 89 90 105 998 56 677 884 530 --sort_classes_by_power 1
 ```
 
+### Jitter
+
+The jitter prevents the same exact noise vectors from cycling repetitively during repetitive music so that the video output is more interesting. If you do want to cycle repetitively, set jitter to 0.
+
+Range: 0 – 1
+Default: 0.5 
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --jitter 0
+```
 
