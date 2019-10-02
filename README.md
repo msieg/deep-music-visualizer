@@ -17,7 +17,7 @@ cd deep-visualizer
 pip install -r requirements.txt
 ```
 
-If you are running on linux, you will also need to run:
+If you are on linux, you may also need to run:
 
 ```bash
 apt-get install ffmpeg
