@@ -233,4 +233,15 @@ Example:
 python deep_visualizer.py --song beethoven.mp3 --use_previous_vectors 1
 ```
 
+### output_file
+
+Output file name
+
+Default: output.mp4
+
+Example:
+
+```bash
+python deep_visualizer.py --song beethoven.mp3 --output_file my_movie.mp4
+```
 
