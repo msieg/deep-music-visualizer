@@ -7,9 +7,11 @@ Examples: https://www.instagram.com/deep_visualizer/
 
 This repo has been tested on Python3
 
-Download this repository and run this command in terminal:
+Assuming you have python installed, open terminal and run these commands:
 
 ```bash
+git clone https://github.com/msieg/deep-visualizer.git
+cd deep-visualizer
 pip install -r requirements.txt
 ```
 
@@ -35,7 +37,7 @@ python deep_visualizer.py --song beethoven.mp3
 
 Default: 128
 
-If you are running on a CPU (if you're not sure, you are on a CPU), you probably want to use a resolution of 128 or else the code will take a very long time to run. Even at 128, this will take ~25 minutes to generate 1 minute of video on a standard laptop (assuming all other parameters are default). To dramatically reduce runtime and generate higher quality videos, use a resolution of 512 on a [GPU on a google cloud virtual machine](https://cloud.google.com/deep-learning-vm/docs/cloud-marketplace).
+If you are running on a CPU (if you're not sure, you are on a CPU), you probably want to use a resolution of 128 or else the code will take a very long time to run. Even at 128, this will take ~25 minutes to generate 1 minute of video on a standard laptop (assuming all other parameters are default. To speed up runtime, you can increase the [frame_length](#Frame_length). To dramatically reduce runtime and generate higher quality videos, use a resolution of 512 on a [GPU on a google cloud virtual machine](https://cloud.google.com/deep-learning-vm/docs/cloud-marketplace).
 
 Example:
 
