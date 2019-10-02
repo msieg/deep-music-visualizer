@@ -19,7 +19,9 @@ pip install -r requirements.txt
 
 If you are running on linux, you will also need to run:
 
+```bash
 apt-get install ffmpeg
+```
 
 ## How to run
 
