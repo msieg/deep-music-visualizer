@@ -46,7 +46,7 @@ else:
 if args.pitch_sensitivity:
     pitch_sensitivity=args.pitch_sensitivity
 else:
-    pitch_sensitivity=240
+    pitch_sensitivity=220
     
 if args.tempo_sensitivity:
     tempo_sensitivity=args.tempo_sensitivity
