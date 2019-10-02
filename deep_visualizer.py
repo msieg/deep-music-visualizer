@@ -4,7 +4,6 @@ import numpy as np
 import moviepy.editor as mpy
 import random
 import torch
-
 from scipy.misc import toimage
 from tqdm import tqdm
 from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noise_sample,
@@ -12,16 +11,17 @@ from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noi
 
 #get input arguments
 parser = argparse.ArgumentParser()
-parser.add_argument("--song")
-parser.add_argument("--model_name")
+parser.add_argument("--song",required=True)
+parser.add_argument("--resolution")
 parser.add_argument("--duration")
 parser.add_argument("--pitch_sensitivity")
 parser.add_argument("--tempo_sensitivity")
 parser.add_argument("--depth")
-parser.add_argument("--classes")
+parser.add_argument("--classes", nargs='+',type=int)
 parser.add_argument("--num_classes")
+parser.add_argument("--sort_classes_by_power")
 parser.add_argument("--jitter")
-parser.add_argument("--hop_length")
+parser.add_argument("--frame_length")
 parser.add_argument("--truncation")
 parser.add_argument("--smooth_factor")
 parser.add_argument("--batch_size")
@@ -29,70 +29,77 @@ parser.add_argument("--use_previous_classes")
 parser.add_argument("--use_previous_vectors")
 args = parser.parse_args()
 
+
 if args.song:
     song=args.song
+    print('\nReading audio \n')
     y, sr = librosa.load(song)
 else:
     raise ValueError("you must enter an audio file name in the --song argument")
 
-if args.model_name:
-    model_name=args.model_name
+if args.resolution:
+    model_name='biggan-deep-' + args.resolution
 else:
-    model_name='biggan-deep-512'
+    model_name='biggan-deep-128'
     
 if args.pitch_sensitivity:
-    pitch_sensitivity=args.pitch_sensitivity
+    pitch_sensitivity=int(args.pitch_sensitivity)
 else:
     pitch_sensitivity=50  
     
 if args.tempo_sensitivity:
-    tempo_sensitivity=args.tempo_sensitivity
+    tempo_sensitivity=float(args.tempo_sensitivity)
 else:
     tempo_sensitivity=0.2
     
 if args.depth:
-    depth=args.depth
+    depth=float(args.depth)
 else:
-    depth=0
+    depth=1
    
 if args.num_classes:
-    num_classes=args.num_classes
+    num_classes=int(args.num_classes)
 else:
     num_classes=12
+    
+if args.sort_classes_by_power:
+    sort_classes_by_power=int(args.sort_classes_by_power)
+else:
+    sort_classes_by_power=0
 
 if args.jitter:
-    jitter=args.jitter
+    jitter=float(args.jitter)
 else:
     jitter=0.5
 
-if args.hop_length:
-    hop_length=args.hop_length
+if args.frame_length:
+    frame_length=int(args.frame_length)
 else:
-    hop_length=512
+    frame_length=512
     
 if args.truncation:
-    truncation=args.truncation
+    truncation=float(args.truncation)
 else:
     truncation=1
     
 if args.smooth_factor:
-    smooth_factor=args.smooth_factor
+    smooth_factor=int(args.smooth_factor)
 else:
     smooth_factor=10
     
 if args.batch_size:
-    batch_size=args.batch_size
+    batch_size=int(args.batch_size)
 else:
     batch_size=30
     
 if args.duration:
-    seconds=args.duration
-    frame_lim=int(np.floor(seconds*22050/hop_length/batch_size))
+    seconds=int(args.duration)
+    frame_lim=int(np.floor(seconds*22050/frame_length/batch_size))
 else:
-    frame_lim=int(np.floor(len(y)/sr*22050/hop_length/batch_size))
+    frame_lim=int(np.floor(len(y)/sr*22050/frame_length/batch_size))
     
 if args.use_previous_vectors:
-    use_previous_vectors=args.use_previous_vectors
+    use_previous_vectors=int(args.use_previous_vectors)
 else:
     use_previous_vectors=0
 
@@ -111,10 +118,9 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 ########################################
 ########################################
 
-print('\nReading audio \n')
 
 #create spectrogram
-spec = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128,fmax=8000, hop_length=hop_length)
+spec = librosa.feature.melspectrogram(y=y, sr=sr, n_mels=128,fmax=8000, hop_length=frame_length)
 
 #get mean power at each time point
 specm=np.mean(spec,axis=0)
@@ -132,7 +138,7 @@ gradm = gradm.clip(min=0)
 specm=(specm-np.min(specm))/np.ptp(specm)
 
 #create chromagram of pitches X time points
-chroma = librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=hop_length)
+chroma = librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=frame_length)
 
 #compute power gradient for each pitch / class
 chromagrad=np.gradient(chroma)[1]
@@ -148,9 +154,10 @@ chromasort=np.argsort(np.mean(chroma,axis=1))[::-1]
 ########################################
 
 
-
 if args.classes:
     classes=args.classes
+    if len(classes) not in [12,num_classes]:
+        raise ValueError("The number of classes entered in the --class argument must equal 12 or [num_classes] if specified")
     
 elif args.use_previous_classes:
     cvs=np.load('class_vectors.npy')
@@ -160,6 +167,10 @@ else: #select 12 random classes
     cls1000=list(range(1000))
     random.shuffle(cls1000)
     classes=cls1000[:12]
+    
+
+if sort_classes_by_power==1:
+    classes=[classes[s] for s in chromasort]
 
 
 
@@ -199,6 +210,7 @@ update_last=np.zeros(128)
 ########################################
 ########################################
 
+
 #get new jitters
 def new_jitters(jitter):
     jitters=np.zeros(128)
@@ -213,10 +225,10 @@ def new_jitters(jitter):
 #get new update directions
 def new_update_dir(nv2,update_dir):
     for ni,n in enumerate(nv2):                  
-        if n >= 2*truncation - (tempo_sensitivity+0.5):
+        if n >= 2*truncation - tempo_sensitivity:
             update_dir[ni] = -1  
                         
-        elif n < -2*truncation + (tempo_sensitivity+0.5):
+        elif n < -2*truncation + tempo_sensitivity:
             update_dir[ni] = 1   
     return update_dir
 
@@ -235,7 +247,7 @@ def smooth(class_vectors,smooth_factor):
     return np.array(class_vectors_terp)
 
 
-print('\n\nGenerating input vectors \n')
+print('\nGenerating input vectors \n')
 
 for i in tqdm(range(len(gradm))):   
     
@@ -290,7 +302,7 @@ for i in tqdm(range(len(gradm))):
         cv2[chromasort[0]]=cv2[chromasort[0]]+0.01
 
     #adjust depth    
-    cv2=cv2*(1-depth)
+    cv2=cv2*depth
     
     #append new class vector
     class_vectors.append(cv2)
@@ -313,6 +325,13 @@ else:
     np.save('class_vectors.npy',class_vectors)
     np.save('noise_vectors.npy',noise_vectors)
 
+
+########################################
+########################################
+########################################
+########################################
+########################################
+    
 
 #convert to Tensor
 noise_vectors = torch.Tensor(np.array(noise_vectors))      
@@ -361,7 +380,7 @@ for i in tqdm(range(frame_lim)):
 
 #Save video  
 aud = mpy.AudioFileClip(song,fps = 44100) 
-clip = mpy.ImageSequenceClip(frames, fps=22050/hop_length)
+clip = mpy.ImageSequenceClip(frames, fps=22050/frame_length)
 clip = clip.set_audio(aud)
 clip.write_videofile("output.mp4",audio_codec='aac')
 
