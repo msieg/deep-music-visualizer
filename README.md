@@ -62,7 +62,9 @@ python deep_visualizer.py --song beethoven.mp3 --duration 30
 The pitch sensitivity controls how rapidly the class vector (thematic content of the video) will react to changes in pitch. The lower the number, the higher the sensitivity. 
 
 Range: > 2
+
 Recommended range: 5 - 200
+
 Default: 50
 
 Example:
@@ -73,7 +75,7 @@ python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 10
 
 ### Tempo sensitivity
 
-The tempo sensitivity controls how rapidly the noise vector (overall size, position, and orientation of objects) will react to changes in volume and tempo. The higher the number, the higher the sensitivity. 
+The tempo sensitivity controls how rapidly the noise vector (i.e. the overall size, position, and orientation of objects in the images) will react to changes in volume and tempo. The higher the number, the higher the sensitivity. 
 
 Recommended range: 0.5 – 0.3
 Default: 0.2
@@ -86,9 +88,10 @@ python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 0.1
 
 ### Depth
 
-This specifies the max value of the class vector units. Numbers closer to 1 yield more thematically rich content. Numbers closer to 0 seem to yield more 'deep' structures like human and dog faces. 
+The depth specifies the max value of the class vector units. Numbers closer to 1 seem to yield more thematically rich content. Numbers closer to 0 seem to yield more 'deep' structures like human and dog faces. However, this depends heavily on the specific classes you are using.  
 
 Range: 0.01 - 1
+
 Default: 1
 
 Example:
@@ -101,7 +104,7 @@ python deep_visualizer.py --song beethoven.mp3 --depth 0.5
 
 If you want to choose which classes (image categories) to visualize, you can specify a list of ImageNet indices (1-1000) here. ([list of ImageNet class indices](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a)). The number of classes must be equal to [num_classes] (default is twelve, corresponding to the twelve musical pitches (A, A#, B, etc.)). You can also enter the class indices in order of priority (highest priority first) and set [sort_classes_by_power] to 1. 
 
-Default: Twelve random indices between 1-1000
+Default: Twelve random indices between 0-999
 
 Example (if num_classes is set to default of twelve):
 ```bash
@@ -110,7 +113,7 @@ python deep_visualizer.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105
 
 ### Num_classes
 
-If you want to focus the visualizer around fewer than twelve themes, you can set num_classes to a number less than twelve. Since each class is associated with a pitch, the pitches that are kept when num_classes < 12 are those with the most overall power in the song. 
+If you want to focus the visualizer around fewer than twelve themes, you can set num_classes to a number less than twelve. Since each class is associated with a pitch, the pitches that are retained when num_classes < 12 are those with the most overall power in the song. 
 
 Default: 12
 
@@ -127,7 +130,7 @@ python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 
 
 ### Sort_classes_by_power
 
-Set this to 1 if you want to prioritize the classes based on the order that you entered them in the [class] input. If you do not specify the [class] input, there is no reason to set this to 1. If you do specify the class input and do not set this to 1, the classes will be associated with the pitches in harmonic order from A, A#, B, etc.
+Set this to 1 if you want to prioritize the classes based on the order that you entered them in the [class input](#classes). If you do not specify the class input, there is no reason to set this to 1. If you do specify the class input and do not set this to 1, the classes will be associated with the pitches in harmonic order from A, A#, B, etc.
 
 Example:
 
@@ -150,7 +153,7 @@ python deep_visualizer.py --song beethoven.mp3 --jitter 0
 
 ### Frame_length
 
-The frame length controls the number of audio frames per video frame in the output. If you want a high frame rate for visualizing very rapid music, lower the frame_length. If you want a lower frame rate (perhaps if you are running on a CPU and want to cut down your runtime), raise the frame_length. The default of 512 is high quality. 
+The frame length controls the number of audio frames per video frame in the output. If you want a higher frame rate for visualizing very rapid music, lower the frame_length. If you want a lower frame rate (perhaps if you are running on a CPU and want to cut down your runtime), raise the frame_length. The default of 512 is high quality. 
 
 Range: Multiples of 2^6
 
@@ -164,7 +167,7 @@ python deep_visualizer.py --song beethoven.mp3 --frame_length 2048
 
 ### Truncation
 
-The truncation controls the variability of images that BigGAN generates. Truncations closer to 1 yield more variable images, and truncations closer to 0 yield simpler images with more recognizable objects. 
+The truncation controls the variability of images that BigGAN generates by limiting the max values in the noise vector. Truncations closer to 1 yield more variable images, and truncations closer to 0 yield simpler images with more recognizable, normal-looking objects. 
 
 Range: 0.1 - 1
 
@@ -178,7 +181,7 @@ python deep_visualizer.py --song beethoven.mp3 --truncation 0.4
 
 ### Smooth_factor
 
-After the class vectors have been generated, they are smoothed by interpolating linearly between the means of class vectors within bins of size [smooth_factor]. This is performed because small local fluctuations in pitch can cause the video frames to fluctuate back and forth. If you want to visualize very fast music with rapid changes in pitch and tempo, you can lower the smooth factor to 1. You may also want to lower the frame_length in that case. 
+After the class vectors have been generated, they are smoothed by interpolating linearly between the means of class vectors in bins of size [smooth_factor]. This is performed because small local fluctuations in pitch can cause the video frames to fluctuate back and forth. If you want to visualize very fast music with rapid changes in pitch and tempo, you can lower the smooth factor to 1. You may also want to lower the frame_length in that case. However, for most songs, it is difficult to avoid rapid fluctuations with smooth factors less than 10 (assuming a default [frame_length](#frame_length)). 
 
 Range: > 1
 
@@ -192,7 +195,7 @@ python deep_visualizer.py --song beethoven.mp3 --smooth_factor 6
 
 ### Batch_size
 
-BigGAN generates the images in batches of size [batch_size]. The only reason to lower batch_size from the default of 30 is if you run out of CUDA memory on a GPU. This will slightly increase overall runtime. 
+BigGAN generates the images in batches of size [batch_size]. The only reason to reduce batch size from the default of 30 is if you run out of CUDA memory on a GPU. Reducing the batch size will slightly increase overall runtime. 
 
 Default: 30
 
@@ -204,7 +207,7 @@ python deep_visualizer.py --song beethoven.mp3 --batch_size 20
 
 ### Use_previous_classes
 
-If your previous run of the visualizer used random classes (i.e. you did not manually set the [class] input), and you liked the video output but want to mess with some other parameters, set use_previous_classes to 1 so that you use can create a similar video with the same classes. 
+If your previous run of the visualizer used random classes (i.e. you did not manually set the [class](#classes) input), and you liked the video output but want to mess with some other parameters, set use_previous_classes to 1 so that you create a similar video with the same classes on the next run of the code. 
 
 Default: 0
 
@@ -216,7 +219,7 @@ python deep_visualizer.py --song beethoven.mp3 --use_previous_classes 1
 
 ### Use_previous_vectors
 
-If you're messing around with the visualizer parameters, it can be useful to generate videos with short durations to keep your runtime low. Once you find the right set of parameters, set use_previous_vector to 1 to generate the same video again, but for a longer duration. 
+If you're messing around with the visualizer parameters, it can be useful to generate videos with short durations to keep your runtime low. Once you find the right set of parameters, remove the [duration](#duration) argument and set use_previous_vectors to 1 to generate the same video again, but for a longer duration. 
 
 Default: 0
 
