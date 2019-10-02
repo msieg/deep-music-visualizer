@@ -14,19 +14,19 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--song",required=True)
 parser.add_argument("--resolution")
 parser.add_argument("--duration")
-parser.add_argument("--pitch_sensitivity")
-parser.add_argument("--tempo_sensitivity")
-parser.add_argument("--depth")
-parser.add_argument("--classes", nargs='+',type=int)
-parser.add_argument("--num_classes")
-parser.add_argument("--sort_classes_by_power")
-parser.add_argument("--jitter")
-parser.add_argument("--frame_length")
-parser.add_argument("--truncation")
-parser.add_argument("--smooth_factor")
-parser.add_argument("--batch_size")
-parser.add_argument("--use_previous_classes")
-parser.add_argument("--use_previous_vectors")
+parser.add_argument("--pitch_sensitivity", type=int)
+parser.add_argument("--tempo_sensitivity", type=float)
+parser.add_argument("--depth", type=float)
+parser.add_argument("--classes", nargs='+', type=int)
+parser.add_argument("--num_classes", type=int)
+parser.add_argument("--sort_classes_by_power", type=int)
+parser.add_argument("--jitter", type=float)
+parser.add_argument("--frame_length", type=int)
+parser.add_argument("--truncation", type=float)
+parser.add_argument("--smooth_factor", type=int)
+parser.add_argument("--batch_size", type=int)
+parser.add_argument("--use_previous_classes", type=int)
+parser.add_argument("--use_previous_vectors", type=int)
 args = parser.parse_args()
 
 
@@ -43,63 +43,63 @@ else:
     model_name='biggan-deep-128'
     
 if args.pitch_sensitivity:
-    pitch_sensitivity=int(args.pitch_sensitivity)
+    pitch_sensitivity=args.pitch_sensitivity
 else:
     pitch_sensitivity=50  
     
 if args.tempo_sensitivity:
-    tempo_sensitivity=float(args.tempo_sensitivity)
+    tempo_sensitivity=args.tempo_sensitivity
 else:
     tempo_sensitivity=0.2
     
 if args.depth:
-    depth=float(args.depth)
+    depth=args.depth
 else:
     depth=1
    
 if args.num_classes:
-    num_classes=int(args.num_classes)
+    num_classes=args.num_classes
 else:
     num_classes=12
     
 if args.sort_classes_by_power:
-    sort_classes_by_power=int(args.sort_classes_by_power)
+    sort_classes_by_power=args.sort_classes_by_power
 else:
     sort_classes_by_power=0
 
 if args.jitter:
-    jitter=float(args.jitter)
+    jitter=args.jitter
 else:
     jitter=0.5
 
 if args.frame_length:
-    frame_length=int(args.frame_length)
+    frame_length=args.frame_length
 else:
     frame_length=512
     
 if args.truncation:
-    truncation=float(args.truncation)
+    truncation=args.truncation
 else:
     truncation=1
     
 if args.smooth_factor:
-    smooth_factor=int(args.smooth_factor)
+    smooth_factor=args.smooth_factor
 else:
     smooth_factor=10
     
 if args.batch_size:
-    batch_size=int(args.batch_size)
+    batch_size=args.batch_size
 else:
     batch_size=30
     
 if args.duration:
-    seconds=int(args.duration)
+    seconds=args.duration
     frame_lim=int(np.floor(seconds*22050/frame_length/batch_size))
 else:
     frame_lim=int(np.floor(len(y)/sr*22050/frame_length/batch_size))
     
 if args.use_previous_vectors:
-    use_previous_vectors=int(args.use_previous_vectors)
+    use_previous_vectors=args.use_previous_vectors
 else:
     use_previous_vectors=0
 
@@ -234,6 +234,10 @@ def new_update_dir(nv2,update_dir):
 
 #smooth class vectors
 def smooth(class_vectors,smooth_factor):
+    
+    if smooth_factor==1:
+        return class_vectors
+    
     class_vectors_terp=[]
     for c in range(int(np.floor(len(class_vectors)/smooth_factor)-1)):  
         ci=c*smooth_factor          
@@ -288,7 +292,11 @@ for i in tqdm(range(len(gradm))):
     #generate new class vector
     cv2=np.zeros(1000)
     for j in range(num_classes):
-        cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i] + chromagrad[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity/2)))
+        cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity)))
+
+
+    # for j in range(num_classes):
+    #     cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i] + chromagrad[chromasort[j]][i])/pitch_sensitivity))/(1+(1/(pitch_sensitivity/2)))
 
     #normalize new class vector between 0 and 1
     min_class_val = min(i for i in cv2 if i != 0)
