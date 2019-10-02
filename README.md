@@ -63,7 +63,7 @@ python deep_visualizer.py --song beethoven.mp3 --duration 30
 
 The pitch sensitivity controls how rapidly the class vector (thematic content of the video) will react to changes in pitch. The higher the number, the higher the sensitivity. 
 
-Range: 0 – 300
+Range: 0 – 299
 
 Recommended range: 200 – 295
 
@@ -79,7 +79,7 @@ python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 280
 
 The tempo sensitivity controls how rapidly the noise vector (i.e. the overall size, position, and orientation of objects in the images) will react to changes in volume and tempo. The higher the number, the higher the sensitivity. 
 
-Recommended range: 0.5 – 0.5
+Recommended range: 0.05 – 0.5
 Default: 0.2
 
 Example:
