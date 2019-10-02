@@ -24,6 +24,12 @@ apt-get install ffmpeg
 apt-get install libsndfile1
 ```
 
+If ffmpeg install fails, you may first need to run:
+
+```bash
+apt-get update
+```
+
 ## How to run
 
 All features of the visualizer are available as input parameters. Each parameter is described below.
