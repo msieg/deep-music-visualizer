@@ -86,7 +86,7 @@ else:
 if args.smooth_factor:
     smooth_factor=args.smooth_factor
 else:
-    smooth_factor=10
+    smooth_factor=20
     
 if args.batch_size:
     batch_size=args.batch_size
