@@ -126,6 +126,8 @@ python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 
 
 Set this to 1 if you want to prioritize the classes based on the order that you entered them in the [class] input. If you do not specify the [class] input, there is no reason to set this to 1. If you do specify the class input and do not set this to 1, the classes will be associated with the pitches in harmonic order from A, A#, B, etc.
 
-
+```bash
+python deep_visualizer.py --song beethoven.mp3  --classes 45 99 567 234 89 90 105 998 56 677 884 530 --sort_classes_by_power 1
+```
 
 
