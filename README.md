@@ -151,6 +151,7 @@ python deep_visualizer.py --song beethoven.mp3 --jitter 0
 The frame length controls the number of audio frames per video frame in the output. If you want a very high quality video with a high frame rate, lower the frame_length. If you want a lower frame rate (perhaps if you are running on a CPU and want to cut down your runtime), raise the frame rate. The default of 512 is high quality. 
 
 Range: Multiples of 2^6
+
 Default: 512
 
 Example:
