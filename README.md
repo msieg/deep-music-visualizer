@@ -39,7 +39,7 @@ This is the only required argument!
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3
+python visualize.py --song beethoven.mp3
 ```
 
 ### resolution
@@ -53,7 +53,7 @@ If you are running on a CPU (if you're not sure, you are on a CPU), you probably
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --resolution 512
+python visualize.py --song beethoven.mp3 --resolution 512
 ```
 
 ### duration
@@ -65,7 +65,7 @@ Default: Full length of the audio
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --duration 30
+python visualize.py --song beethoven.mp3 --duration 30
 ```
 
 ### pitch sensitivity
@@ -81,7 +81,7 @@ Default: 220
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 280
+python visualize.py --song beethoven.mp3 --pitch_sensitivity 280
 ```
 
 ### tempo sensitivity
@@ -95,7 +95,7 @@ Default: 0.25
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --pitch_sensitivity 0.1
+python visualize.py --song beethoven.mp3 --pitch_sensitivity 0.1
 ```
 
 ### depth
@@ -109,7 +109,7 @@ Default: 1
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --depth 0.5
+python visualize.py --song beethoven.mp3 --depth 0.5
 ```
 
 ### classes
@@ -120,7 +120,7 @@ Default: Twelve random indices between 0-999
 
 Example (if num_classes is set to default of twelve):
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105 998 56 677 884 530
+python visualize.py --song beethoven.mp3 --classes 45 99 567 234 89 90 105 998 56 677 884 530
 ```
 
 ### num_classes
@@ -133,13 +133,13 @@ Default: 12
 
 Example:
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --num_classes 4 
+python visualize.py --song beethoven.mp3 --num_classes 4 
 ```
 
 Or if you want to choose the classes:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --num_classes 4 --classes 987 23 56 782
+python visualize.py --song beethoven.mp3 --num_classes 4 --classes 987 23 56 782
 ```
 
 ### sort_classes_by_power
@@ -149,7 +149,7 @@ Set this to 1 if you want to prioritize the classes based on the order that you 
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3  --classes 45 99 567 234 89 90 105 998 56 677 884 530 --sort_classes_by_power 1
+python visualize.py --song beethoven.mp3  --classes 45 99 567 234 89 90 105 998 56 677 884 530 --sort_classes_by_power 1
 ```
 
 ### jitter
@@ -162,7 +162,7 @@ Default: 0.5
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --jitter 0
+python visualize.py --song beethoven.mp3 --jitter 0
 ```
 
 ### frame_length
@@ -176,7 +176,7 @@ Default: 512
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --frame_length 2048
+python visualize.py --song beethoven.mp3 --frame_length 2048
 ```
 
 ### truncation
@@ -190,7 +190,7 @@ Default: 1
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --truncation 0.4
+python visualize.py --song beethoven.mp3 --truncation 0.4
 ```
 
 ### smooth_factor
@@ -206,7 +206,7 @@ Default: 20
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --smooth_factor 6
+python visualize.py --song beethoven.mp3 --smooth_factor 6
 ```
 
 ### batch_size
@@ -218,7 +218,7 @@ Default: 30
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --batch_size 20
+python visualize.py --song beethoven.mp3 --batch_size 20
 ```
 
 ### use_previous_classes
@@ -230,7 +230,7 @@ Default: 0
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --use_previous_classes 1
+python visualize.py --song beethoven.mp3 --use_previous_classes 1
 ```
 
 ### use_previous_vectors
@@ -242,7 +242,7 @@ Default: 0
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --use_previous_vectors 1
+python visualize.py --song beethoven.mp3 --use_previous_vectors 1
 ```
 
 ### output_file
@@ -254,6 +254,6 @@ Default: output.mp4
 Example:
 
 ```bash
-python deep_visualizer.py --song beethoven.mp3 --output_file my_movie.mp4
+python visualize.py --song beethoven.mp3 --output_file my_movie.mp4
 ```
 
