@@ -1,5 +1,5 @@
 # Deep Music Visualizer
-The Deep Visualizer uses BigGAN (Brock et al., 2018), a generative neural network, to visualize music. Like this:
+The Deep Music Visualizer uses BigGAN (Brock et al., 2018), a generative neural network, to visualize music. Like this:
 
 [![Alt text](https://img.youtube.com/vi/L7R-yBZ5QYc/0.jpg)](https://www.youtube.com/watch?v=L7R-yBZ5QYc)
 
