@@ -42,16 +42,21 @@ if args.resolution:
     model_name='biggan-deep-' + args.resolution
 else:
     model_name='biggan-deep-128'
+
+if args.frame_length:
+    frame_length=args.frame_length
+else:
+    frame_length=512
     
 if args.pitch_sensitivity:
-    pitch_sensitivity=args.pitch_sensitivity
+    pitch_sensitivity=(300-args.pitch_sensitivity) * 512 / frame_length
 else:
-    pitch_sensitivity=220
+    pitch_sensitivity=80 * 512 / frame_length
     
 if args.tempo_sensitivity:
     tempo_sensitivity=args.tempo_sensitivity
 else:
-    tempo_sensitivity=0.25
+    tempo_sensitivity=0.25 * frame_length / 512
     
 if args.depth:
     depth=args.depth
@@ -72,11 +77,6 @@ if args.jitter:
     jitter=args.jitter
 else:
     jitter=0.5
-
-if args.frame_length:
-    frame_length=args.frame_length
-else:
-    frame_length=512
     
 if args.truncation:
     truncation=args.truncation
@@ -84,9 +84,12 @@ else:
     truncation=1
     
 if args.smooth_factor:
-    smooth_factor=args.smooth_factor
+    if args.smooth_factor > 1:
+        smooth_factor=args.smooth_factor * 512 / frame_length
+    else:
+        smooth_factor=args.smooth_factor
 else:
-    smooth_factor=20
+    smooth_factor=int(20 * 512 / frame_length)
     
 if args.batch_size:
     batch_size=args.batch_size
@@ -315,10 +318,10 @@ for i in tqdm(range(len(gradm))):
     for j in range(num_classes):
         
         if len(classes)==num_classes and num_classes < 12:
-            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/(300-pitch_sensitivity)))/(1+(1/((300-pitch_sensitivity))))
+            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/(pitch_sensitivity)))/(1+(1/((pitch_sensitivity))))
           
         else:
-            cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/(300-pitch_sensitivity)))/(1+(1/((300-pitch_sensitivity))))
+            cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/(pitch_sensitivity)))/(1+(1/((pitch_sensitivity))))
 
 
     #if more than 6 classes, normalize new class vector between 0 and 1, else simply set max class val to 1
