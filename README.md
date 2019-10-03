@@ -72,7 +72,7 @@ python deep_visualizer.py --song beethoven.mp3 --duration 30
 
 The pitch sensitivity controls how rapidly the class vector (thematic content of the video) will react to changes in pitch. The higher the number, the higher the sensitivity. 
 
-Range: 0 – 299
+Range: 1 – 299
 
 Recommended range: 200 – 295
 
