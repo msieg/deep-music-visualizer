@@ -12,25 +12,26 @@ from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noi
 #get input arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--song",required=True)
-parser.add_argument("--resolution")
+parser.add_argument("--resolution", default='128')
 parser.add_argument("--duration", type=int)
-parser.add_argument("--pitch_sensitivity", type=int)
-parser.add_argument("--tempo_sensitivity", type=float)
-parser.add_argument("--depth", type=float)
+parser.add_argument("--pitch_sensitivity", type=int, default=220)
+parser.add_argument("--tempo_sensitivity", type=float, default=0.25)
+parser.add_argument("--depth", type=float, default=1)
 parser.add_argument("--classes", nargs='+', type=int)
-parser.add_argument("--num_classes", type=int)
-parser.add_argument("--sort_classes_by_power", type=int)
-parser.add_argument("--jitter", type=float)
-parser.add_argument("--frame_length", type=int)
-parser.add_argument("--truncation", type=float)
-parser.add_argument("--smooth_factor", type=int)
-parser.add_argument("--batch_size", type=int)
-parser.add_argument("--use_previous_classes", type=int)
-parser.add_argument("--use_previous_vectors", type=int)
-parser.add_argument("--output_file")
+parser.add_argument("--num_classes", type=int, default=12)
+parser.add_argument("--sort_classes_by_power", type=int, default=0)
+parser.add_argument("--jitter", type=float, default=0.5)
+parser.add_argument("--frame_length", type=int, default=512)
+parser.add_argument("--truncation", type=float, default=1)
+parser.add_argument("--smooth_factor", type=int, default=20)
+parser.add_argument("--batch_size", type=int, default=30)
+parser.add_argument("--use_previous_classes", type=int, default=0)
+parser.add_argument("--use_previous_vectors", type=int, default=0)
+parser.add_argument("--output_file", default="output.mp4")
 args = parser.parse_args()
 
 
+#set song
 if args.song:
     song=args.song
     print('\nReading audio \n')
@@ -38,80 +39,58 @@ if args.song:
 else:
     raise ValueError("you must enter an audio file name in the --song argument")
 
-if args.resolution:
-    model_name='biggan-deep-' + args.resolution
-else:
-    model_name='biggan-deep-128'
+#set model name based on resolution
+model_name='biggan-deep-' + args.resolution
 
-if args.frame_length:
-    frame_length=args.frame_length
-else:
-    frame_length=512
-    
-if args.pitch_sensitivity:
-    pitch_sensitivity=(300-args.pitch_sensitivity) * 512 / frame_length
-else:
-    pitch_sensitivity=80 * 512 / frame_length
-    
-if args.tempo_sensitivity:
-    tempo_sensitivity=args.tempo_sensitivity
-else:
-    tempo_sensitivity=0.25 * frame_length / 512
-    
-if args.depth:
-    depth=args.depth
-else:
-    depth=1
-   
-if args.num_classes:
-    num_classes=args.num_classes
-else:
-    num_classes=12
-    
-if args.sort_classes_by_power:
-    sort_classes_by_power=args.sort_classes_by_power
-else:
-    sort_classes_by_power=0
+frame_length=args.frame_length
 
-if args.jitter:
-    jitter=args.jitter
-else:
-    jitter=0.5
+#set pitch sensitivity
+pitch_sensitivity=(300-args.pitch_sensitivity) * 512 / frame_length
+
+#set tempo sensitivity
+tempo_sensitivity=args.tempo_sensitivity * frame_length / 512
+
+#set depth
+depth=args.depth
+
+#set number of classes  
+num_classes=args.num_classes
+
+#set sort_classes_by_power    
+sort_classes_by_power=args.sort_classes_by_power
+
+#set jitter
+jitter=args.jitter
     
-if args.truncation:
-    truncation=args.truncation
-else:
-    truncation=1
+#set truncation
+truncation=args.truncation
+
+#set batch size  
+batch_size=args.batch_size
+
+#set use_previous_classes
+use_previous_vectors=args.use_previous_vectors
+
+#set use_previous_vectors
+use_previous_classes=args.use_previous_classes
     
-if args.smooth_factor:
-    if args.smooth_factor > 1:
-        smooth_factor=args.smooth_factor * 512 / frame_length
-    else:
-        smooth_factor=args.smooth_factor
+#set output name
+outname=args.output_file
+
+#set smooth factor
+if args.smooth_factor > 1:
+    smooth_factor=int(args.smooth_factor * 512 / frame_length)
 else:
-    smooth_factor=int(20 * 512 / frame_length)
-    
-if args.batch_size:
-    batch_size=args.batch_size
-else:
-    batch_size=30
-    
+    smooth_factor=args.smooth_factor
+
+#set duration  
 if args.duration:
     seconds=args.duration
     frame_lim=int(np.floor(seconds*22050/frame_length/batch_size))
 else:
     frame_lim=int(np.floor(len(y)/sr*22050/frame_length/batch_size))
     
-if args.use_previous_vectors:
-    use_previous_vectors=args.use_previous_vectors
-else:
-    use_previous_vectors=0
     
-if args.output_file:
-    outname=args.output_file
-else:
-    outname='output.mp4'
-
 
 
 # Load pre-trained model
@@ -149,9 +128,6 @@ specm=(specm-np.min(specm))/np.ptp(specm)
 #create chromagram of pitches X time points
 chroma = librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=frame_length)
 
-#compute power gradient for each pitch / class
-chromagrad=np.gradient(chroma)[1]
-
 #sort pitches by overall power 
 chromasort=np.argsort(np.mean(chroma,axis=1))[::-1]
 
@@ -168,7 +144,7 @@ if args.classes:
     if len(classes) not in [12,num_classes]:
         raise ValueError("The number of classes entered in the --class argument must equal 12 or [num_classes] if specified")
     
-elif args.use_previous_classes:
+elif args.use_previous_classes==1:
     cvs=np.load('class_vectors.npy')
     classes=list(np.where(cvs[0]>0)[0])
     
@@ -187,7 +163,7 @@ if sort_classes_by_power==1:
 cv1=np.zeros(1000)
 for pi,p in enumerate(chromasort[:num_classes]):
     
-    if len(classes)==num_classes and num_classes < 12:
+    if num_classes < 12:
         cv1[classes[pi]] = chroma[p][0]
         
     else:
@@ -317,7 +293,7 @@ for i in tqdm(range(len(gradm))):
     cv2=np.zeros(1000)
     for j in range(num_classes):
         
-        if len(classes)==num_classes and num_classes < 12:
+        if num_classes < 12:
             cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/(pitch_sensitivity)))/(1+(1/((pitch_sensitivity))))
           
         else:
