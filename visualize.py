@@ -154,8 +154,8 @@ else: #select 12 random classes
     classes=cls1000[:12]
     
 
-if sort_classes_by_power==1:
-    classes=[classes[s] for s in chromasort[:num_classes]]
+if sort_classes_by_power==1 and num_classes==12:
+    classes=[classes[s] for s in chromasort]
 
 
 
