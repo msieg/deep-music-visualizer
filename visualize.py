@@ -155,7 +155,7 @@ else: #select 12 random classes
     
 
 if sort_classes_by_power==1:
-    classes=[classes[s] for s in chromasort]
+    classes=[classes[s] for s in chromasort[:num_classes]]
 
 
 
