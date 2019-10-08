@@ -12,7 +12,7 @@ from pytorch_pretrained_biggan import (BigGAN, one_hot_from_names, truncated_noi
 #get input arguments
 parser = argparse.ArgumentParser()
 parser.add_argument("--song",required=True)
-parser.add_argument("--resolution", default='128')
+parser.add_argument("--resolution", default='512')
 parser.add_argument("--duration", type=int)
 parser.add_argument("--pitch_sensitivity", type=int, default=220)
 parser.add_argument("--tempo_sensitivity", type=float, default=0.25)
