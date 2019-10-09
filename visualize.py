@@ -132,6 +132,7 @@ chroma = librosa.feature.chroma_cqt(y=y, sr=sr, hop_length=frame_length)
 chromasort=np.argsort(np.mean(chroma,axis=1))[::-1]
 
 
+
 ########################################
 ########################################
 ########################################
@@ -154,8 +155,11 @@ else: #select 12 random classes
     classes=cls1000[:12]
     
 
-if sort_classes_by_power==1 and num_classes==12:
-    classes=[classes[s] for s in chromasort]
+
+
+if sort_classes_by_power==1:
+
+    classes=[classes[s] for s in np.argsort(chromasort[:num_classes])]
 
 
 
@@ -242,7 +246,10 @@ def smooth(class_vectors,smooth_factor):
 
 
 def normalize_cv(cv2):
-    min_class_val = min(i for i in cv2 if i != 0)
+    if max(cv2)==0:
+        min_class_val=0
+    else:
+        min_class_val = min(i for i in cv2 if i != 0)
     for ci,c in enumerate(cv2):
         if c==0:
             cv2[ci]=min_class_val    
@@ -293,12 +300,7 @@ for i in tqdm(range(len(gradm))):
     cv2=np.zeros(1000)
     for j in range(num_classes):
         
-        if num_classes < 12:
-            cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/(pitch_sensitivity)))/(1+(1/((pitch_sensitivity))))
-          
-        else:
-            cv2[classes[chromasort[j]]] = (cvlast[classes[chromasort[j]]] + ((chroma[chromasort[j]][i])/(pitch_sensitivity)))/(1+(1/((pitch_sensitivity))))
-
+        cv2[classes[j]] = (cvlast[classes[j]] + ((chroma[chromasort[j]][i])/(pitch_sensitivity)))/(1+(1/((pitch_sensitivity))))
 
     #if more than 6 classes, normalize new class vector between 0 and 1, else simply set max class val to 1
     if num_classes > 6:
