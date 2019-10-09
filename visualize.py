@@ -226,6 +226,7 @@ def new_update_dir(nv2,update_dir):
             update_dir[ni] = 1   
     return update_dir
 
+
 #smooth class vectors
 def smooth(class_vectors,smooth_factor):
     
@@ -245,11 +246,12 @@ def smooth(class_vectors,smooth_factor):
     return np.array(class_vectors_terp)
 
 
-def normalize_cv(cv2):
+#normalize class vector between 0-1
+def normalize_cv(cv2,classes):
     if max(cv2)==0:
-        min_class_val=0
-    else:
-        min_class_val = min(i for i in cv2 if i != 0)
+        cv2[classes[0]]=cv2[classes[0]]+0.01
+        
+    min_class_val = min(i for i in cv2 if i != 0)
     for ci,c in enumerate(cv2):
         if c==0:
             cv2[ci]=min_class_val    
@@ -304,7 +306,7 @@ for i in tqdm(range(len(gradm))):
 
     #if more than 6 classes, normalize new class vector between 0 and 1, else simply set max class val to 1
     if num_classes > 6:
-        cv2=normalize_cv(cv2)
+        cv2=normalize_cv(cv2,classes)
     else:
         cv2=cv2/np.max(cv2)
     
