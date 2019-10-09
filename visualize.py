@@ -31,11 +31,12 @@ parser.add_argument("--output_file", default="output.mp4")
 args = parser.parse_args()
 
 
-#set song
+#read song
 if args.song:
     song=args.song
     print('\nReading audio \n')
     y, sr = librosa.load(song)
+    y=y[np.where(y>0)[0][0]:]
 else:
     raise ValueError("you must enter an audio file name in the --song argument")
 
@@ -247,15 +248,11 @@ def smooth(class_vectors,smooth_factor):
 
 
 #normalize class vector between 0-1
-def normalize_cv(cv2,classes):
-    if max(cv2)==0:
-        cv2[classes[0]]=cv2[classes[0]]+0.01
-        
+def normalize_cv(cv2,classes):     
+    
     min_class_val = min(i for i in cv2 if i != 0)
-    for ci,c in enumerate(cv2):
-        if c==0:
-            cv2[ci]=min_class_val    
     cv2=(cv2-min_class_val)/np.ptp(cv2) 
+    cv2.clip(0)
     
     return cv2
 
