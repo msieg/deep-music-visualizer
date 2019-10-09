@@ -36,7 +36,6 @@ if args.song:
     song=args.song
     print('\nReading audio \n')
     y, sr = librosa.load(song)
-    y=y[np.where(y>0)[0][0]:]
 else:
     raise ValueError("you must enter an audio file name in the --song argument")
 
@@ -169,10 +168,9 @@ cv1=np.zeros(1000)
 for pi,p in enumerate(chromasort[:num_classes]):
     
     if num_classes < 12:
-        cv1[classes[pi]] = chroma[p][0]
-        
+        cv1[classes[pi]] = chroma[p][np.min([np.where(chrow>0)[0][0] for chrow in chroma])]       
     else:
-        cv1[classes[p]] = chroma[p][0]
+        cv1[classes[p]] = chroma[p][np.min([np.where(chrow>0)[0][0] for chrow in chroma])]
 
 #initialize first noise vector
 nv1 = truncated_noise_sample(truncation=truncation)[0]
@@ -248,11 +246,12 @@ def smooth(class_vectors,smooth_factor):
 
 
 #normalize class vector between 0-1
-def normalize_cv(cv2,classes):     
-    
+def normalize_cv(cv2):
     min_class_val = min(i for i in cv2 if i != 0)
+    for ci,c in enumerate(cv2):
+        if c==0:
+            cv2[ci]=min_class_val    
     cv2=(cv2-min_class_val)/np.ptp(cv2) 
-    cv2.clip(0)
     
     return cv2
 
@@ -303,7 +302,7 @@ for i in tqdm(range(len(gradm))):
 
     #if more than 6 classes, normalize new class vector between 0 and 1, else simply set max class val to 1
     if num_classes > 6:
-        cv2=normalize_cv(cv2,classes)
+        cv2=normalize_cv(cv2)
     else:
         cv2=cv2/np.max(cv2)
     
