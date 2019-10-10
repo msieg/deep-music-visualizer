@@ -3,7 +3,7 @@ The Deep Music Visualizer uses BigGAN (Brock et al., 2018), a generative neural 
 
 [![Alt text](https://img.youtube.com/vi/L7R-yBZ5QYc/0.jpg)](https://www.youtube.com/watch?v=L7R-yBZ5QYc)
 
-More examples: https://www.instagram.com/deep_visualizer/
+More examples: https://www.instagram.com/deep_music_visualizer/
 
 ## Installation
 
