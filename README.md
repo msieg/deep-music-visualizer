@@ -95,7 +95,7 @@ Default: 0.25
 Example:
 
 ```bash
-python visualize.py --song beethoven.mp3 --pitch_sensitivity 0.1
+python visualize.py --song beethoven.mp3 --tempo_sensitivity 0.1
 ```
 
 ### depth
